@@ -6,6 +6,15 @@ All MOOSE-based applications come with quite a few command-line options.  These 
 
 Command-line options can be set using either short syntax such as `-i inputfile.i` or longer syntax with either `--long-option value` or `--long-option=value`.  If spaces are needed for the value then you need to quote them like `--long-option='value1 value2'`.  If using the `=` it's important not to put any space around it.
 
+# Dempsey Rogers id=ddr
+
+!equation
+\dot{\epsilon}=\left(-\alpha\epsilon+\gamma-\frac{\omega^2}{\gamma}\right)\epsilon+ \frac{1}{r}\frac{\partial}{\partial r}\left(rD_\epsilon\frac{\partial\epsilon}{\partial r}\right)\quad\quad\quad \epsilon\equiv \left<\left(\frac{\tilde{n}}{n_0}\right)^2\right>^{1/2}
+
+
+Some other text where I link to my name from the same page [#ddr]
+
+
 To print out the available command-line options use `--help`.  An example from MooseTest looks like this:
 
 ```

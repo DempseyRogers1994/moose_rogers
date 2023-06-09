@@ -19,8 +19,11 @@ AlertToken = tokens.newToken('AlertToken', brand='')
 AlertTitle = tokens.newToken('AlertTitle', brand='', prefix=True, center=False, icon=True, icon_name=None)
 AlertContent = tokens.newToken('AlertContent')
 
+
 # LaTeX alert environment that uses tcolorbox package
-ALERT_LATEX = """\\setlength\\intextsep{0pt}
+
+# \\NewDocumentEnvironment{alert}{O{#2}moO{white}}{%
+ALERT_LATEX = """\\setlength\\intextsep{15pt}
 \\NewDocumentEnvironment{alert}{O{#2}moO{white}}{%
   \\ifthenelse{\\isempty{#1}}{%
       \\IfValueT{#3}{\\tcbset{title=#3}}
@@ -60,8 +63,14 @@ class AlertExtension(command.CommandExtension):
             renderer.addPackage('wrapfig')
             renderer.addPackage('graphicx')
 
+
+            # renderer.addPreamble('\\definecolor{alert-error}{RGB}{1,0,100}')
+            renderer.addPreamble('\\definecolor{alert-note}{RGB}{100,100,100}')
+            # renderer.addPreamble('\\definecolor{alert-warning}{RGB}{2,2,100}')
+            # renderer.addPreamble('\\definecolor{alert-info}{RGB}{0,0,21}')
+            # renderer.addPreamble('\\definecolor{alert-construction}{RGB}{5,114,33}')
             renderer.addPreamble('\\definecolor{alert-error}{RGB}{153,0,0}')
-            renderer.addPreamble('\\definecolor{alert-note}{RGB}{0,88,151}')
+            # renderer.addPreamble('\\definecolor{alert-note}{RGB}{0,88,151}')
             renderer.addPreamble('\\definecolor{alert-warning}{RGB}{220,200,100}')
             renderer.addPreamble('\\definecolor{alert-info}{RGB}{0,128,21}')
             renderer.addPreamble('\\definecolor{alert-construction}{RGB}{255,114,33}')

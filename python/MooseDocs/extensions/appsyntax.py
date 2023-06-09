@@ -23,7 +23,7 @@ from .. import common
 from ..common import exceptions, report_error
 from ..base import components, LatexRenderer, MarkdownReader
 from ..tree import html, tokens, latex
-from . import command, core, floats, table, autolink, materialicon, modal, alert
+from . import command, core, floats, table, autolink, materialicon, modal, alert , mygreeting
 
 LOG = logging.getLogger(__name__)
 

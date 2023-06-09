@@ -1,4 +1,10 @@
-# Mesh
+Here we will:
+
+- make a list
+- get some practice
+- make a link to [otheredit]
+
+[otheredit]: http://127.0.0.1:8000/application_usage/command_line_usage.html 
 
 ## Creating a Mesh
 
