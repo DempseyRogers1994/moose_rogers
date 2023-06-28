@@ -4,6 +4,9 @@
 
 The geochemistry module is designed to solve geochemical models.  The capabilities include:
 
+!tagger moose/modules/geochemistry/doc/content/modules/geochemistry/index.md keyg:valg keychem:valuechem
+
+
 - equilibrium aqueous systems
 - redox disequilibrium
 - sorption and surface complexation

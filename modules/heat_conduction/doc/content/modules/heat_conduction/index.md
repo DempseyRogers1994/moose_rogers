@@ -5,6 +5,8 @@ provisions to couple temperature fields to fluid domains through boundary condit
 
 ## Tutorial Problems
 
+!tagger moose/modules/heat_conduction/doc/content/modules/heat_conduction/index.md keyheat:valheat key:val key1:val1
+
 A [tutorial](modules/heat_conduction/tutorials/introduction/index.md) for the Heat Conduction module is available to show the steps for setting up a basic model.
 
 ## Basic Theory of Heat Conduction

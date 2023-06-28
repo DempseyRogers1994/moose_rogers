@@ -15,6 +15,10 @@ Multiphysics Object-Oriented Simulation Environment
 !col! small=12 medium=4 large=4 icon=computer
 ### Proven Capability class=center style=font-weight:200;
 
+words 
+
+!tagger moose/modules/doc/content/index2.md key1:val1 keya:val thing1:thing2
+
 !style halign=center
 
 - Scalability to over 30,000 cores
@@ -27,7 +31,7 @@ Multiphysics Object-Oriented Simulation Environment
 ### Rapid Development class=center style=font-weight:200;
 
 !style halign=center
-
+  
 - Simple [installation](getting_started/installation/index.md)
 - Extensive [tutorials](getting_started/examples_and_tutorials/index.md)
 - Built-in [physics modules](modules/index.md)

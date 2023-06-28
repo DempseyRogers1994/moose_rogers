@@ -9,7 +9,6 @@
 
 import re
 import logging
-
 import MooseDocs
 from .. import common
 from ..base import components, Extension
@@ -36,6 +35,7 @@ class AutoLinkExtension(Extension):
     @staticmethod
     def defaultConfig():
         config = Extension.defaultConfig()
+        # #print('config ', config)
         return config
 
     def extend(self, reader, renderer):
@@ -53,9 +53,6 @@ def createTokenHelper(key, parent, info, page, settings):
     match = PAGE_LINK_RE.search(info[key])
     bookmark = match.group('bookmark')[1:] if match.group('bookmark') else None
     filename = match.group('filename')
-
-    # The link is local (i.e., [#foo]), the heading will be gathered on render because it
-    # could be after the current position.
     if (filename is None) and (bookmark is not None):
         return LocalLink(parent, bookmark=bookmark)
     elif (filename is not None):
@@ -82,6 +79,8 @@ class PageShortcutLinkComponent(core.ShortcutLinkInline):
         return settings
 
     def createToken(self, parent, info, page, settings):
+        # #print('PageShortcutLinkComponent')
+        # #print('info ',info)
         token = createTokenHelper('key', parent, info, page, settings)
         return token or core.ShortcutLinkInline.createToken(self, parent, info, page, settings)
 
@@ -243,3 +242,16 @@ class RenderAutoLink(RenderLinkBase):
             return None
 
         return self.createLatexHelper(parent, token, page, desired)
+    
+
+
+
+        #  for d in loaded['data']:
+        #     if tagdict['benchmark'] in d['benchmark']:
+        #         existing_dictionary+=1
+        #         print('existing benchmark')
+        #         break
+
+        # print('new benchmark')
+        #         with open('tags.pkl', 'wb') as f:
+        #             pickle.dump(loaded, f)

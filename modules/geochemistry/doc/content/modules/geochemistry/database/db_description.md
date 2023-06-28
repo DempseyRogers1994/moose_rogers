@@ -6,7 +6,7 @@ The `geochemistry` module works with chemical databases in a simple [JSON](https
 making it easy to parse in a variety of applications or languages.
 
 ## Python database converter
-
+ 
 A python utility The module contains a python utility that translates between the MOOSE format and other formats such as EQ3/6 or [GWB](gwb_database.md). A database in either of these formats can be translated to a MOOSE JSON database using
 
 ```
