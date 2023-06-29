@@ -17,7 +17,7 @@ Multiphysics Object-Oriented Simulation Environment
 
 words 
 
-!tagger moose/modules/doc/content/index2.md key1:val1 keya:val thing1:thing2
+!tagger index2 moose/modules/doc/content/index2.md key1:val1 keya:val thing1:thing2
 
 !style halign=center
 

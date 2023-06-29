@@ -7,4 +7,4 @@ Documentation for the misc module needs some work...
 
 !syntax complete groups=MiscApp level=3
 
-!tagger moose/modules/doc/content/index.md key1:val1 keya:val
+!tagger index moose/modules/doc/content/index.md key1:val1 keya:val
