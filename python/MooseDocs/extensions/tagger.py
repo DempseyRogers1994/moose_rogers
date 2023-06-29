@@ -24,7 +24,7 @@ import codecs
         Example Tagger command in *.md:
         !tagger geochem moose/modules/geochemistry/doc/content/modules/geochemistry/index.md keyg:valg keychem:valuechem
 
-        Example Output TagDictionary in tags.pkl:
+        Example Output TagDictionary in tags.txt:
         {"data": 
         [{"name": "heatconduction", "path": "moose/modules/heat_conduction/doc/content/modules/heat_conduction/index.md", "key_vals": {"keyheat": "valheat", "key": "val", "key1": "val1"}}, 
         {"name": "index", "path": "moose/modules/doc/content/index.md", "key_vals": {"key1": "val1", "keya": "val"}}, 
