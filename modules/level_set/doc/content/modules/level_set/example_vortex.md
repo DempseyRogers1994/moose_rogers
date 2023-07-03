@@ -7,7 +7,7 @@ problem involves initializing $u_h$ (see [Theory](/level_set/theory.md)) with a 
 velocity field (see [LevelSetOlssonVortex](/LevelSetOlssonVortex.md)), so that, at $t=2$,
 the bubble should return to its original position.
 
-!tagger vortex moose/modules/level_set/doc/content/modules/level_set/example_vortex.md keyvor:valvor key:val key1:val1 key:val
+!tagger vortex keyvor:valvor key:val key1:val1 key:val
 
 
 The only significant difference between the [Rotating Bubble Example](/example_rotate.md)
