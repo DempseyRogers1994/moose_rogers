@@ -183,6 +183,7 @@ class Executioner(mixins.ConfigObject, mixins.TranslatorObject):
         mixins.ConfigObject.__init__(self, **kwargs)
         mixins.TranslatorObject.__init__(self)
         self._page_objects = dict()
+        self._tagging_objects = dict()
         self._total_time = 0
         self._clear_progress()
 
@@ -205,7 +206,7 @@ class Executioner(mixins.ConfigObject, mixins.TranslatorObject):
         self._page_ast = dict()
         self._page_result = dict()
         self._global_attributes = dict()
-
+# Dempsey 
     def initPages(self, nodes):
         """Initialize the Page objects."""
 
@@ -221,14 +222,39 @@ class Executioner(mixins.ConfigObject, mixins.TranslatorObject):
             for ext in self.translator.extensions:
                 node.attributes['__{}__'.format(ext.name)] = dict()
             self.translator.executePageMethod('initPage', node)
+    
+    def initTags(self, nodes):
+        """Initialize the Page objects."""
+
+        # Initialize Page objects
+        for node in nodes:
+            # Assign translator instance, destination root, and output extension
+            node.translator = self.translator
+            node.base = self.translator.destination
+            if isinstance(node, pages.Source):
+                node.output_extension = self.translator.renderer.EXTENSION
+
+            # Setup page attributes
+            for ext in self.translator.extensions:
+                node.attributes['__{}__'.format(ext.name)] = dict()
+            self.translator.executePageMethod('initTags', node)
 
     def addPage(self, page):
         """Add a Page object to be Translated."""
         self._page_objects[page.uid] = page
 
+    def addTag(self, tag):
+        """Add a Page object to be Translated."""
+        uid=len(self._tagging_objects)
+        self._tagging_objects[uid+1] = tag
+
     def getPages(self):
         """Return a list of Page objects."""
         return self._page_objects.values()
+    
+    def getTags(self):
+        """Return a list of Page objects."""
+        return self._tagging_objects.values()
 
     def setGlobalAttribute(self, key, value):
         """Set a global attribute to be communicated across processors."""

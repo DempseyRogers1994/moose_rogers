@@ -15,7 +15,6 @@ from time import sleep
 from timeit import default_timer as clock
 from multiprocessing.pool import ThreadPool
 import threading # for thread locking and thread timers
-
 class SchedulerError(Exception):
     pass
 
@@ -238,7 +237,7 @@ class Scheduler(MooseObject):
 
         # Store all scheduled jobs
         self.__scheduled_jobs.append(j_dag.topological_sort())
-
+        return j_lock
     def queueJobs(self, jobs, j_lock):
         """
         Determine which queue jobs should enter. Finished jobs are placed in the status
@@ -461,3 +460,9 @@ class Scheduler(MooseObject):
 
         except KeyboardInterrupt:
             self.killRemaining(keyboard=True)
+
+
+
+class tagging_lock():
+    t_lock = threading.Lock()
+    # return t_lock

@@ -17,7 +17,7 @@ Multiphysics Object-Oriented Simulation Environment
 
 words 
 
-!tagger index2 key1:val1 keya:val thing1:thing2
+!tagger two key1:val1 keya:val thing1:thing2
 
 !style halign=center
 

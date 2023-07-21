@@ -3,10 +3,17 @@ import os, re
 import pickle
 import logging
 from ..tree import tokens
-from ..common import __init__
+from ..common import __init__, exceptions
 from . import command
 import json
 import codecs
+from threading import Thread, Event, Lock, current_thread
+from TestHarness.schedulers.Scheduler import Scheduler as s
+from  ..base import executioners as ex
+import uuid
+import platform
+import multiprocessing
+
 """     Tagger ouputs to tags.txt found at: 'moose/python/MooseDocs/extensions'
 
         This extension defines the tagger command: !tagger name path key:value.  Tagger will except a string that represents the markdown file that is associated with an arb. list of key:value pairs.
@@ -44,17 +51,49 @@ TaggingTitle = tokens.newToken('TaggingTitle', brand='', prefix=True, center=Fal
 TaggingContent = tokens.newToken('TaggingContent')
 
 class TaggingExtension(command.CommandExtension):
+    # Threading changes - make self accessable to all threads to allow .join of .database
+    
     def extend(self, reader, renderer):
         self.requires(command)
         self.addCommand(reader, TaggingCommand())
     def __init__(self, *args, **kwargs):
         command.CommandExtension.__init__(self, *args, **kwargs)
         self._database={'data':[]}
+        # self.__executioner = ex.ParallelBarrier()
+        self.__executioner = ex.Executioner(**kwargs)
+        self.__unique_id = uuid.uuid4()      # a unique identifier
     @property
     def database(self):
         return self._database
+    @property
+    def executioner(self):
+        """Return the Executioner object."""
+        return self.__executioner
+    @property
+    def uid(self):
+        """Return the unique ID for this translator object."""
+        return self.__unique_id
+    
+    def addTag(self, page):
+        """Add an additional page to the list of available pages."""
+        self.__executioner.addTag(page)
 
+    def addTags(self, tags):
+        """Add an additional pages to the list of available pages."""
+        for tag in tags:
+           self.__executioner.addTag(tag)
 
+    def initTags(self, tag):
+        """Initialize a page (call after addPage)."""
+        if not self.__initialized:
+            msg = "`initTags` should only be done after the Translator.init()"
+            raise exceptions.MooseDocsException(msg)
+        self.__executioner.initTags([tag])
+
+    def getTags(self):
+        """Return the Page objects"""
+        return self.__executioner.getTags()
+    
 class TaggingCommand(command.CommandComponent):
     COMMAND= 'tagger'
     SUBCOMMAND= '*'
@@ -63,8 +102,14 @@ class TaggingCommand(command.CommandComponent):
     def defaultSettings():
         settings = command.CommandComponent.defaultSettings()
         return settings
-
+    def databaseLock(self):
+        return self._databaseLock
+        
+    
     def createToken(self, parent, info, page, settings):
+        print(f"\ncurrent thread name {current_thread().name}")
+
+        allowedKeys=['key1', 'keya', 'keyx', 'thing1', 'keyg']
         name=info[2]
         keylist=info[3].split()
         mpath=re.sub(r'^.*?moose/', 'moose/', page.source)
@@ -74,59 +119,52 @@ class TaggingCommand(command.CommandComponent):
             EntryKeyValDict.append([key_vals[0],key_vals[1]])
 
         PageData= {'name':name, "path":mpath, "key_vals":dict(EntryKeyValDict)}
-        # UploadableEntry={'data':[]}
-        # UploadableEntry['data'].append(PageData)
-        # print('\n\n\n\n')
-        # print('UploadableEntry')
-        # print(UploadableEntry)
-        # print('\n')
 
-        # # Set storage location
-        while "moose" not in os.listdir():
-            os.chdir('../')
-        os.chdir('moose/python/MooseDocs/extensions')
+        self.extension.database['data'].append(PageData)
+        
+        for i in range(len(self.extension.database['data'])):
+            bad_keys=[]
+            for key in self.extension.database['data'][i]['key_vals'].keys():
+                if key not in allowedKeys:
+                    bad_keys.append(key)
 
-        # save the dictionary
-        first_flag=0  # if there are no elements in dict then logic is needed to include 1st entry since  TagDictionary == listed
-        existing_dictionary=0
-        try:
-            with open('tags.txt') as f:
-                TagDictionary=json.load(f)
-
-            # with open('tags.pkl', 'rb') as f:
-            #     TagDictionary= pickle.load(f)
-        except:
-            # if len(TagDictionary.keys())<1:
-            UploadableEntry={'data':[]}
-            UploadableEntry['data'].append(PageData)
-            TagDictionary = UploadableEntry
-            first_flag+=1
-        else:
-            for d in TagDictionary['data']:
-                if PageData['name'] in d['name']:
-                    existing_dictionary+=1
-                    if existing_dictionary ==1 and first_flag==0:
-                        msg = "Tag already exists; not adding to 'name' dictionary: "
-                        msg += PageData['name']
-                        LOG.warning(msg)
-                    break
-
-
-
-        # self.extension.database['data'].append(PageData)
-        # print("DATABASE")
+            if len(bad_keys)>0:            
+                msg = "Not and allowed key; not adding to 'key' dictionary: "
+                msg += ", ".join(bad_keys)
+                LOG.warning(msg)
+            for key in bad_keys:
+                del self.extension.database['data'][i]['key_vals'][key]
+        
+        
+        self.extension.database.update()
         # print(self.extension.database)
-        # if not in set or first then save the new dict
-        if existing_dictionary ==0 or first_flag==1:
-            if first_flag ==0: # Dont want to append the 1st entry twice
-                TagDictionary['data'].append(PageData)
-            # print('\nTagDictionary :\n',TagDictionary)
-            # print('new Tag for names\n')
+        # tag=self.extension.database
+        # tag.uid=self.extension.uid
+        self.extension.addTag(self.extension.database)
 
-            # with open('tags.pkl', 'wb') as f:
-            #     pickle.dump(TagDictionary, f)
+        ####self.extension.addTag(PageData)
+        # print(dir(self.extension.executioner))
+        print(self.extension.executioner.getTags())
+        # print(self.extension.executioner._getTags)
 
-            with open('tags.txt', 'wb') as f:
-                json.dump(TagDictionary, codecs.getwriter('utf-8')(f), ensure_ascii=False)
+        # print(self.extension.uid)                 ### cannot get this to exicutioner line233
+        # print(self.extension.executioner.getTags())
+        # print(self.extension.executioner._ctx.Manager().__init__()s)
+        # print(self.extension.executioner.__init__())
 
-        return info
+        # ex.ParallelBarrier(self.extension.executioner)
+#-----------------------------------------------------------
+        # if (platform.python_version_tuple()[0] >= '3') and (int(platform.python_version_tuple()[1]) >= 9) and (platform.system() == 'Darwin'):
+        #     self._ctx = multiprocessing.get_context('fork')
+        # else:
+        #     self._ctx = multiprocessing.get_context()
+
+        # # A lock used prior to caching items or during directory creation to prevent race conditions
+        # self._lock = self._ctx.Lock()
+
+        # ex.Executioner(self.extension.addTag(PageData))
+        # ex.Executioner.addTag(self, PageData)
+        # ex.Executioner.setGlobalAttribute(self,key='data', value=PageData)
+        # print(ex.Executioner.getGlobalAttribute(self,key='data'))
+        # return info
+    

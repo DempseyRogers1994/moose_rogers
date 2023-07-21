@@ -7,4 +7,4 @@ Documentation for the misc module needs some work...
 
 !syntax complete groups=MiscApp level=3
 
-!tagger index  key1:val1 keya:val
+!tagger seven  key1:val1 keya:val
