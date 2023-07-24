@@ -225,7 +225,7 @@ class Executioner(mixins.ConfigObject, mixins.TranslatorObject):
     
     def initTags(self, nodes):
         """Initialize the Page objects."""
-
+        
         # Initialize Page objects
         for node in nodes:
             # Assign translator instance, destination root, and output extension
@@ -238,10 +238,18 @@ class Executioner(mixins.ConfigObject, mixins.TranslatorObject):
             for ext in self.translator.extensions:
                 node.attributes['__{}__'.format(ext.name)] = dict()
             self.translator.executePageMethod('initTags', node)
+        
 
     def addPage(self, page):
         """Add a Page object to be Translated."""
         self._page_objects[page.uid] = page
+
+    def tagLock(self):
+        global taglock
+        global tagpool
+        taglock = multiprocessing.Lock()
+        tagpool = multiprocessing.Pool(8)
+        return( taglock)
 
     def addTag(self, tag):
         """Add a Page object to be Translated."""

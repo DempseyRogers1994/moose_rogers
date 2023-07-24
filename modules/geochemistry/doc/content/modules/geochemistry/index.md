@@ -4,7 +4,7 @@
 
 The geochemistry module is designed to solve geochemical models.  The capabilities include:
 
-!tagger four  keyg:valg keychem:valuechem
+!tagger ___FOUR___  keyg:valg keychem:valuechem
 
 
 - equilibrium aqueous systems

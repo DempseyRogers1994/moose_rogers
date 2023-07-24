@@ -10,9 +10,9 @@ import codecs
 from threading import Thread, Event, Lock, current_thread
 from TestHarness.schedulers.Scheduler import Scheduler as s
 from  ..base import executioners as ex
+from  ..base import Translator as tr
 import uuid
-import platform
-import multiprocessing
+
 
 """     Tagger ouputs to tags.txt found at: 'moose/python/MooseDocs/extensions'
 
@@ -59,8 +59,10 @@ class TaggingExtension(command.CommandExtension):
     def __init__(self, *args, **kwargs):
         command.CommandExtension.__init__(self, *args, **kwargs)
         self._database={'data':[]}
-        # self.__executioner = ex.ParallelBarrier()
         self.__executioner = ex.Executioner(**kwargs)
+        self.__parallellBarrier=ex.ParallelBarrier()
+        self.__parallellQueue=ex.ParallelQueue()
+        self.__parallellPipe=ex.ParallelPipe()
         self.__unique_id = uuid.uuid4()      # a unique identifier
     @property
     def database(self):
@@ -69,6 +71,18 @@ class TaggingExtension(command.CommandExtension):
     def executioner(self):
         """Return the Executioner object."""
         return self.__executioner
+    @property
+    def parallelbarrier(self):
+        """Return the Executioner object."""
+        return self.__parallellBarrier
+    @property
+    def parallelqueue(self):
+        """Return the Executioner object."""
+        return self.__parallellQueue
+    @property
+    def parallelpipe(self):
+        """Return the Executioner object."""
+        return self.__parallellPipe
     @property
     def uid(self):
         """Return the unique ID for this translator object."""
@@ -102,12 +116,17 @@ class TaggingCommand(command.CommandComponent):
     def defaultSettings():
         settings = command.CommandComponent.defaultSettings()
         return settings
-    def databaseLock(self):
-        return self._databaseLock
+    
+    @property
+    def _lock(self):
+        self._lock = self.extension.executioner.tagLock()
+        return self._lock
         
     
     def createToken(self, parent, info, page, settings):
         print(f"\ncurrent thread name {current_thread().name}")
+        self.extension.executioner._ctx.Lock()
+        self.extension.executioner._lock
 
         allowedKeys=['key1', 'keya', 'keyx', 'thing1', 'keyg']
         name=info[2]
@@ -134,25 +153,38 @@ class TaggingCommand(command.CommandComponent):
                 LOG.warning(msg)
             for key in bad_keys:
                 del self.extension.database['data'][i]['key_vals'][key]
+            self.extension.executioner.addTag(self.extension.database['data'][i])
         
+        tags=self.extension.executioner.getTags()
+        print('\ngetTags')
+        print(tags)
         
-        self.extension.database.update()
-        # print(self.extension.database)
-        # tag=self.extension.database
-        # tag.uid=self.extension.uid
-        self.extension.addTag(self.extension.database)
+        a=ex.Executioner.setGlobalAttribute(self, current_thread().name, tags)
+        print('\nsetGA')
+        print(a)
 
-        ####self.extension.addTag(PageData)
-        # print(dir(self.extension.executioner))
-        print(self.extension.executioner.getTags())
-        # print(self.extension.executioner._getTags)
 
-        # print(self.extension.uid)                 ### cannot get this to exicutioner line233
-        # print(self.extension.executioner.getTags())
-        # print(self.extension.executioner._ctx.Manager().__init__()s)
-        # print(self.extension.executioner.__init__())
+        b=(ex.Executioner.getGlobalAttribute(self, current_thread().name))
+        print('\ngetGA')
+        print(b)
 
-        # ex.ParallelBarrier(self.extension.executioner)
+
+                        ### Not working when called from the tagger property        
+                        # a=self.extension.executioner.setGlobalAttribute(current_thread().name, tags)
+                        # print('\nsetGA')
+                        # print(a)
+
+
+                        # b=(self.extension.executioner.getGlobalAttribute(current_thread().name))
+                        # print('\ngetGA')
+                        # print(b)
+
+        print('\ntagObj')
+        print(self.extension.executioner._tagging_objects)
+        
+        # print(self.extension.parallelpipe._translator)
+
+        # self.extension.parallelpipe(self.extension.executioner)
 #-----------------------------------------------------------
         # if (platform.python_version_tuple()[0] >= '3') and (int(platform.python_version_tuple()[1]) >= 9) and (platform.system() == 'Darwin'):
         #     self._ctx = multiprocessing.get_context('fork')
