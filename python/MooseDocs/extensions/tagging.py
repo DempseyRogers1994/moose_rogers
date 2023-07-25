@@ -53,6 +53,11 @@ TaggingContent = tokens.newToken('TaggingContent')
 class TaggingExtension(command.CommandExtension):
     # Threading changes - make self accessable to all threads to allow .join of .database
     
+    @staticmethod
+    def defaultConfig():
+        config = command.CommandExtension.defaultConfig()
+        return config
+
     def extend(self, reader, renderer):
         self.requires(command)
         self.addCommand(reader, TaggingCommand())
@@ -117,74 +122,72 @@ class TaggingCommand(command.CommandComponent):
         settings = command.CommandComponent.defaultSettings()
         return settings
     
-    @property
     def _lock(self):
-        self._lock = self.extension.executioner.tagLock()
+        # with self.extension.executioner._ctx.Lock():
+        self._lock = self.extension.executioner._ctx.Lock()
         return self._lock
+
         
     
+
     def createToken(self, parent, info, page, settings):
         print(f"\ncurrent thread name {current_thread().name}")
-        self.extension.executioner._ctx.Lock()
-        self.extension.executioner._lock
-
-        allowedKeys=['key1', 'keya', 'keyx', 'thing1', 'keyg']
-        name=info[2]
-        keylist=info[3].split()
-        mpath=re.sub(r'^.*?moose/', 'moose/', page.source)
-        EntryKeyValDict=[]
-        for keys in keylist:
-            key_vals=keys.split(':')
-            EntryKeyValDict.append([key_vals[0],key_vals[1]])
-
-        PageData= {'name':name, "path":mpath, "key_vals":dict(EntryKeyValDict)}
-
-        self.extension.database['data'].append(PageData)
-        
-        for i in range(len(self.extension.database['data'])):
-            bad_keys=[]
-            for key in self.extension.database['data'][i]['key_vals'].keys():
-                if key not in allowedKeys:
-                    bad_keys.append(key)
-
-            if len(bad_keys)>0:            
-                msg = "Not and allowed key; not adding to 'key' dictionary: "
-                msg += ", ".join(bad_keys)
-                LOG.warning(msg)
-            for key in bad_keys:
-                del self.extension.database['data'][i]['key_vals'][key]
-            self.extension.executioner.addTag(self.extension.database['data'][i])
-        
-        tags=self.extension.executioner.getTags()
-        print('\ngetTags')
-        print(tags)
-        
-        a=ex.Executioner.setGlobalAttribute(self, current_thread().name, tags)
+        a=ex.Executioner.setGlobalAttribute(self, 'tagging', tags)
         print('\nsetGA')
         print(a)
+        # self.extension.executioner._lock
+        with self._lock():
+            # a=ex.Executioner.setGlobalAttribute(self, 'tagging', tags)
+            # print('\nsetGA')
+            # print(a)
+            allowedKeys=['key1', 'keya', 'keyx', 'thing1', 'keyg']
+            name=info[2]
+            keylist=info[3].split()
+            mpath=re.sub(r'^.*?moose/', 'moose/', page.source)
+            EntryKeyValDict=[]
+            for keys in keylist:
+                key_vals=keys.split(':')
+                EntryKeyValDict.append([key_vals[0],key_vals[1]])
+
+            PageData= {'name':name, "path":mpath, "key_vals":dict(EntryKeyValDict)}
+
+            self.extension.database['data'].append(PageData)
+            
+            for i in range(len(self.extension.database['data'])):
+                bad_keys=[]
+                for key in self.extension.database['data'][i]['key_vals'].keys():
+                    if key not in allowedKeys:
+                        bad_keys.append(key)
+
+                if len(bad_keys)>0:            
+                    msg = "Not and allowed key; not adding to 'key' dictionary: "
+                    msg += ", ".join(bad_keys)
+                    LOG.warning(msg)
+                for key in bad_keys:
+                    del self.extension.database['data'][i]['key_vals'][key]
+                self.extension.executioner.addTag(self.extension.database['data'][i])
+            
+            tags=self.extension.executioner.getTags()
+            print('\ngetTags')
+            print(tags)
+            
+            # a=ex.Executioner.setGlobalAttribute(self, 'tagging', tags)
+            # print('\nsetGA')
+            # print(a)
 
 
-        b=(ex.Executioner.getGlobalAttribute(self, current_thread().name))
-        print('\ngetGA')
-        print(b)
+            # b=(ex.Executioner.getGlobalAttribute(self, current_thread().name))
+            # print('\ngetGA')
+            # print(b)
 
-
-                        ### Not working when called from the tagger property        
-                        # a=self.extension.executioner.setGlobalAttribute(current_thread().name, tags)
-                        # print('\nsetGA')
-                        # print(a)
-
-
-                        # b=(self.extension.executioner.getGlobalAttribute(current_thread().name))
-                        # print('\ngetGA')
-                        # print(b)
-
-        print('\ntagObj')
-        print(self.extension.executioner._tagging_objects)
+            print('\ntagObj')
+            print(self.extension.executioner._tagging_objects)
         
         # print(self.extension.parallelpipe._translator)
 
-        # self.extension.parallelpipe(self.extension.executioner)
+        # content= self.extension.parallelpipe(self.extension.executioner)
+        # print(content)
+# 
 #-----------------------------------------------------------
         # if (platform.python_version_tuple()[0] >= '3') and (int(platform.python_version_tuple()[1]) >= 9) and (platform.system() == 'Darwin'):
         #     self._ctx = multiprocessing.get_context('fork')

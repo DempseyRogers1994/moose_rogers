@@ -183,6 +183,7 @@ class Executioner(mixins.ConfigObject, mixins.TranslatorObject):
         mixins.ConfigObject.__init__(self, **kwargs)
         mixins.TranslatorObject.__init__(self)
         self._page_objects = dict()
+        # self._tagging_objects = dict()
         self._tagging_objects = dict()
         self._total_time = 0
         self._clear_progress()
@@ -247,9 +248,9 @@ class Executioner(mixins.ConfigObject, mixins.TranslatorObject):
     def tagLock(self):
         global taglock
         global tagpool
-        taglock = multiprocessing.Lock()
+        # taglock = multiprocessing.Lock()
         tagpool = multiprocessing.Pool(8)
-        return( taglock)
+        return(taglock)
 
     def addTag(self, tag):
         """Add a Page object to be Translated."""
@@ -437,6 +438,10 @@ class Executioner(mixins.ConfigObject, mixins.TranslatorObject):
     def _getPage(self, uid):
         """Retrieve a Page object from the global list by its UID."""
         return self._page_objects[uid]
+    
+    # def _getTag(self):
+    #     """Retrieve a Page object from the global list by its UID."""
+    #     return self._tagging_objects
 
 class Serial(Executioner):
     """Simple serial Executioner, this is useful for debugging or for very small builds."""
