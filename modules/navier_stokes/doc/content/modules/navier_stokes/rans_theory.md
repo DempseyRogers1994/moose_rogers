@@ -2,6 +2,8 @@
 
 ## Introduction
 
+!tagger Integrated_Plant_Analysis dynamics:Steady_State simulation_type:Integrated_plant_analysis
+
 The MOOSE Navier-Stokes module includes experimental turbulence modeling
 capabilities. Presently, the models are insufficient for stand-alone predictive
 simulation, and we recommend that the user tunes the model parameters for their

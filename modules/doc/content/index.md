@@ -17,7 +17,7 @@ Multiphysics Object-Oriented Simulation Environment
 
 words 
 
-!tagger ___ONE___ key1:val1 keya:val thing1:thing2
+!tagger Molten_Salt_Fast_Reactor_Core application:Griffin simulation_tool:Neutronics  other:core&plant_multiphysics
 
 !style halign=center
 

@@ -1,5 +1,7 @@
 # Incompressible Finite Volume Navier Stokes
 
+!tagger High_Temperature_Test_Facility  application:RELAP-7 simulation_tool:Thermal-hydraulics(open-source)  other:transient_simulations
+
 MOOSE's Incompressible Navier Stokes Finite Volume (INSFV) implementation uses a
 colocated grid. To suppress the checkerboard pattern in the pressure field,
 `INSFV` objects support a Rhie-Chow interpolation for the velocity. Users can get

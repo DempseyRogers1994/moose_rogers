@@ -2,6 +2,8 @@
 
 ## Equations
 
+!tagger 67_pebbles dynamics:Steady_State simulation_type:Component_Analysis  other:conjugate_heat_transfer
+
 This module implements the porous media Navier Stokes equations. They are expressed in terms of the superficial
 velocity $\vec{v}_d = \epsilon \vec{V}$ where $\epsilon$ is the porosity and $\vec{V}$ the interstitial velocity. The
 superficial velocity is also known as the extrinsic or Darcy velocity. The other non-linear variables used are

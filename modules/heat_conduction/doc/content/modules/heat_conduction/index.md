@@ -5,7 +5,7 @@ provisions to couple temperature fields to fluid domains through boundary condit
 
 ## Tutorial Problems
 
-!tagger ___ONE___ keyheat:valheat key:val key1:val1
+!tagger Gas_Cooled_Micro_Reactor application:Griffin simulation_tool:Neutronics  other:assembly_multiphysics
 
 A [tutorial](modules/heat_conduction/tutorials/introduction/index.md) for the Heat Conduction module is available to show the steps for setting up a basic model.
 

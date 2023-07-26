@@ -4,7 +4,7 @@
 
 The geochemistry module is designed to solve geochemical models.  The capabilities include:
 
-!tagger ___ONE___  keyg:valg keychem:valuechem
+!tagger SNAP-8_NTP_Reactor application:Griffin simulation_tool:Neutronics  other:core_model
 
 
 - equilibrium aqueous systems

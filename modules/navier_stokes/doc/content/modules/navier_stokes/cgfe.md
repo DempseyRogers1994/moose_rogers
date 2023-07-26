@@ -1,5 +1,7 @@
 # Continuous Galerkin Finite Element Navier Stokes
 
+!tagger Reflector_Bypass_Flow dynamics:Steady_State simulation_type:Component_Analysis  other:PB-FHR 
+
 The CGFE method has been implemented to solve either the incompressible or
 compressible Navier-Stokes equations. The original CGFE method is usually not numerically stable for
 solving problems when the Peclet number is greater than 2. An SUPG (Streamline Upwind Petrov

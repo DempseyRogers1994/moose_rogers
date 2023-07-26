@@ -1,4 +1,5 @@
 # Navier-Stokes Module
+!tagger Heat_Pipe_Micro-Reacto application:Sockeye simulation_tool:Thermal-hydraulics(open-source) 
 
 The MOOSE Navier-Stokes module is a library for the implementation of simulation tools that solve the
 Navier-Stokes equations using either the continuous Galerkin finite element

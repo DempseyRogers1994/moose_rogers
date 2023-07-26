@@ -7,7 +7,8 @@ problem involves initializing $u_h$ (see [Theory](/level_set/theory.md)) with a 
 velocity field (see [LevelSetOlssonVortex](/LevelSetOlssonVortex.md)), so that, at $t=2$,
 the bubble should return to its original position.
 
-!tagger ___ONE___ keyvor:valvor key:val key1:val1 key:val
+!tagger HTGR application:Cardinal/OpenMC simulation_tool:Neutronics  other:assembly_multiphysics
+
 
 
 The only significant difference between the [Rotating Bubble Example](/example_rotate.md)

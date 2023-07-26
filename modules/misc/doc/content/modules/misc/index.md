@@ -7,4 +7,4 @@ Documentation for the misc module needs some work...
 
 !syntax complete groups=MiscApp level=3
 
-!tagger ___SEVEN___  key1:val1 keya:val
+!tagger Molten_Salt_Fast_Reactors_Core application:Pronghorn simulation_tool:Multi-dimensional_Thermal-hydraulics  other:core&plant_multiphysics
